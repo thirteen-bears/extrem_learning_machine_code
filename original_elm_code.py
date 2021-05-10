@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+#correct code
 
 # the dataset can be downloaded from 'https://www.kaggle.com/c/digit-recognizer/data'
 # the code is from "https://towardsdatascience.com/build-an-extreme-learning-machine-in-python-91d1e8958599"
@@ -28,26 +29,31 @@ X_test = scaler.fit_transform(test.values[:,1:])
 y_test = onehotencoder.fit_transform(test.values[:,:1]).toarray()
 
 input_size = X_train.shape[1]
-hidden_number = 1000
+hidden_size = 1000
 
-input_weights = np.random.normal(size=[input_size,hidden_number])
-biases = np.random.normal(size = [hidden_number])
+input_weights = np.random.normal(size=[input_size,hidden_size])
+# 783 1000
+biases = np.random.normal(size=[hidden_size])
+# 1000
 
 def relu(x):
-    return np.maximum(x,0,x)
+   return np.maximum(x, 0, x)
 
 def hidden_nodes(X):
-    G = np.dot(X,input_weights)
-    G = G+biases
+    G = np.dot(X, input_weights)
+    G = G + biases
+    # (42000, 1000) + (1000,)
+    # add every line, keep the row as the same
     H = relu(G)
     return H
 
-output_weight = np.dot(pinv2(hidden_nodes(X_train),y_train))
+output_weights = np.dot(pinv2(hidden_nodes(X_train)), y_train)
 
 def predict(X):
     out = hidden_nodes(X)
-    out = np.dot(out,output_weight)
-    
+    out = np.dot(out, output_weights)
+    return out
+
 prediction = predict(X_test)
 correct = 0
 total = X_test.shape[0]
@@ -57,5 +63,6 @@ for i in range(total):
     actual = np.argmax(y_test[i])
     correct += 1 if predicted == actual else 0
 accuracy = correct/total
-print('Accuracy for ', hidden_number, ' hidden nodes: ', accuracy)
+print('Accuracy for ', hidden_size, ' hidden nodes: ', accuracy)
+
 

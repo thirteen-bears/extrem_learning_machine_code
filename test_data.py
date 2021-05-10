@@ -55,6 +55,7 @@ class HiddenLayer:
     """
  
     def classifisor_train(self, T):
+
         en_one = OneHotEncoder()
         # print(T)
         T = en_one.fit_transform(T.reshape(-1, 1)).toarray()  # 独热编码之后一定要用toarray()转换成正常的数组
@@ -64,6 +65,7 @@ class HiddenLayer:
         sub_former = np.dot(np.transpose(self.h), self.h) + I / C
         all_m = np.dot(np.linalg.pinv(sub_former), np.transpose(self.h))
         self.beta = np.dot(all_m, T)
+      
         return self.beta
  
     def regressor_test(self, test_x):
@@ -119,10 +121,10 @@ y_test = dt_02.iloc[:,[6]]
 scaler = StandardScaler()
 x_train_1 = scaler.fit_transform(x_train.values[:,:])
 y_train_1 = scaler.fit_transform(y_train.values[:,:])
-#x_test_1 = scaler.fit_transform(x_test.values[:,:])
-#y_test_1 = scaler.fit_transform(y_test.values[:,:])
-x_test_1 = np.asarray(x_test.values[:,:],'float64')
-y_test_1 = np.asarray(y_test.values[:,:],'float64')
+x_test_1 = scaler.fit_transform(x_test.values[:,:])
+y_test_1 = scaler.fit_transform(y_test.values[:,:])
+#x_test_1 = np.asarray(x_test.values[:,:],'float64')
+#y_test_1 = np.asarray(y_test.values[:,:],'float64')
 
 a = HiddenLayer(x_train_1, 1000)  # data_X
 a.regressor_train(y_train_1)
